@@ -5,12 +5,16 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CandidateRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
- * @ApiResource()
+ * @ApiResource(normalizationContext={"groups"={"user:read"}},
+ *              denormalizationContext={"groups"={"user:write"}})
  * @ORM\Entity(repositoryClass=CandidateRepository::class)
+ * 
  */
 class Candidate implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -18,16 +22,19 @@ class Candidate implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("user:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user:read", "user:write"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups("user:read")
      */
     private $roles = [];
 
@@ -38,64 +45,83 @@ class Candidate implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
+     * @Groups("user:write")
+     * @SerializedName("password")
+     */
+    private $plainPasword;
+
+    /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $phone;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $address;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $zip;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $photo;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $seekingJobType;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $seekingJobContract;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read", "user:write"})
      */
     private $availability;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"user:read", "user:write"})
      */
     private $registrationDate;
 
     /**
      * @ORM\OneToOne(targetEntity=Cv::class, cascade={"persist", "remove"})
+     * @Groups("user:read")
      */
     private $cv;
+
 
     public function getId(): ?int
     {
@@ -326,6 +352,18 @@ class Candidate implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCv(?Cv $cv): self
     {
         $this->cv = $cv;
+
+        return $this;
+    }
+
+    public function getPlainPasword(): ?string
+    {
+        return $this->plainPasword;
+    }
+
+    public function setPlainPasword(string $plainPasword): self
+    {
+        $this->plainPasword = $plainPasword;
 
         return $this;
     }
