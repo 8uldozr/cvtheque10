@@ -118,7 +118,7 @@ class Candidate implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToOne(targetEntity=Cv::class, cascade={"persist", "remove"})
-     * @Groups("user:read")
+     * @Groups({"user:read", "user:write"})
      */
     private $cv;
 
