@@ -48,7 +48,7 @@ class Candidate implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups("user:write")
      * @SerializedName("password")
      */
-    private $plainPasword;
+    private $plainPassword;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -209,7 +209,7 @@ class Candidate implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function getName(): ?string
@@ -356,14 +356,14 @@ class Candidate implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPlainPasword(): ?string
+    public function getPlainPassword(): ?string
     {
-        return $this->plainPasword;
+        return $this->plainPassword;
     }
 
-    public function setPlainPasword(string $plainPasword): self
+    public function setPlainPassword(string $plainPassword): self
     {
-        $this->plainPasword = $plainPasword;
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
